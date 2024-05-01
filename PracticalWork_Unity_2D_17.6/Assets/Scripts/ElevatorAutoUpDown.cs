@@ -6,48 +6,32 @@ public class ElevatorAutoUpDown : MonoBehaviour
 {
     private SliderJoint2D elevatorMovement;
     
-    private bool isElevatorPermissionMoveDown = false;
-    private bool isElevatorPermissionMoveUp = false;
-
     private float elevatorSpeedDown = -2f;
     private float elevatorSpeedUp = 2f;
+    
     
     // Start is called before the first frame update
     void Start()
     {
         elevatorMovement = GetComponent<SliderJoint2D>();
         
+        // Включаем использование мотора у лифта (Если не был включен в инспекторе)
         elevatorMovement.useMotor = true;
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        if (isElevatorPermissionMoveDown)
-        {          
-            MotionElevator(elevatorSpeedDown);
-            isElevatorPermissionMoveDown = false; 
-        }
-        
-        if (isElevatorPermissionMoveUp)
-        {          
+        // При достижении нижнего лимита или верхнего, лифт едет вверх или вниз (Лимиты задаются в инспекторе)
+        if (elevatorMovement.limitState == JointLimitState2D.LowerLimit)
+        {
             MotionElevator(elevatorSpeedUp);
-            isElevatorPermissionMoveUp = false;
-        }            
-    }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.CompareTag("ElevatorMoveUp"))
-        {
-            isElevatorPermissionMoveUp = true;
         }
-
-        if (collision.CompareTag("ElevatorMoveDown"))
+        else if (elevatorMovement.limitState == JointLimitState2D.UpperLimit)
         {
-            isElevatorPermissionMoveDown = true;
-        }
-    }
+            MotionElevator(elevatorSpeedDown);
+        }      
+    }   
 
     /// <summary>
     /// Движение лифта (Направление движения лифта зависит от скорости)

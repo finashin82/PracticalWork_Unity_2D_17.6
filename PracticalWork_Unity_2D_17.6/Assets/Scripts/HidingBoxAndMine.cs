@@ -6,7 +6,7 @@ public class HidingBoxAndMine : MonoBehaviour
 {
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "Box")
+        if (collision.gameObject.CompareTag("Box"))
         {            
             collision.gameObject.SetActive(false);
             gameObject.SetActive(false);
